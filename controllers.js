@@ -135,7 +135,13 @@ export const deleteProduct = async (productId) => {
   try {
     const product = await Product.findById(new mongoose.Types.ObjectId(productId));
     if (product) {
-      fs.unlinkSync("./public/images/" + product.image);
+      fs.access(product.image, fs.constants.F_OK, (err) => {
+        if (err) {
+          console.log(`${product.image} does not exist`);
+        } else {
+          fs.unlinkSync("./public/images/" + product.image);
+        }
+      });
     }
     const result = await Product.findByIdAndDelete(new mongoose.Types.ObjectId(productId));
     return result;
