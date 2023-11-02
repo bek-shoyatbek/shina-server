@@ -46,7 +46,7 @@ app.get("*", (req, res) => {
 })
 
 
-const port = process.env.PORT || 3333;
+// const port = process.env.PORT || 3333;
 
 
 const httpsServer = https.createServer({
@@ -54,16 +54,16 @@ const httpsServer = https.createServer({
   cert
 }, app);
 
-httpsServer.listen(443)
-  .then(() => {
-    bot.launch();
+(() => {
+  bot.launch();
 
-    // Enable graceful stop
-    process.once("SIGINT", () => bot.stop("SIGINT"));
-    process.once("SIGTERM", () => bot.stop("SIGTERM"));
+  // Enable graceful stop
+  process.once("SIGINT", () => bot.stop("SIGINT"));
+  process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-    console.log(`Server is running on port ${port}`);
-  }).catch((err) => {
-    throw new Error("Server is shutting down....")
-  });;
+  console.log(`Server is running on port`);
+})()
+
+httpsServer.listen(443);
+
 
