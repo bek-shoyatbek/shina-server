@@ -29,7 +29,6 @@ bot.start(async (ctx) => {
     }
   });
 
-
   if (ctx.chat.type == "private") {
     if (!ctx.session.user) {
       await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
@@ -48,9 +47,9 @@ bot.start(async (ctx) => {
           force_reply: true,
         },
       });
+    } else {
+      await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
     }
-  } else {
-    await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
   }
 
 });
