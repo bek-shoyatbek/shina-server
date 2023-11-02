@@ -139,7 +139,11 @@ export const deleteProduct = async (productId) => {
         if (err) {
           console.log(`${product.image} does not exist`);
         } else {
-          fs.unlinkSync("./public/images/" + product.image);
+          if (product.image.startsWith("./public")) {
+            fs.unlinkSync(product.image);
+          } else {
+            fs.unlinkSync("./public/images/" + product.image);
+          }
         }
       });
     }
