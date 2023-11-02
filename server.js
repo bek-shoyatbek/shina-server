@@ -1,12 +1,15 @@
 import express from "express"
 import cors from "cors"
-import {fileURLToPath } from "url";
+import { fileURLToPath } from "url";
+import https from "https";
+import fs from "fs";
 
 
 import { config } from "dotenv";
 
 import { bot } from "./index.js"
 import path from "path";
+
 
 
 const app = express();
@@ -17,11 +20,16 @@ const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
 
+const cert = fs.readFileSync(path.join(__dirname, "certifications", "cert.pem"), "utf8");
+const key = fs.readFileSync(path.join(__dirname, "certifications", "key.pem"), "utf8");
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static("./public"));
-app.use(express.static(path.join(__dirname,"build")));
+app.use(express.static(path.join(__dirname, "build")));
 app.use(cors())
 
 
@@ -33,14 +41,21 @@ import { router } from "./routes.js";
 
 app.use("/api", router);
 
-app.get("*",(req,res)=>{
-  res.sendFile(path.join(__dirname,"build","index.html"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 })
 
 
 const port = process.env.PORT || 3333;
 
-app.listen(port, () => {
+
+const httpsServer = https.createServer({
+  key,
+  cert
+}, app);
+
+httpsServer.listen(443)
+  .then(() => {
     bot.launch();
 
     // Enable graceful stop
@@ -48,4 +63,7 @@ app.listen(port, () => {
     process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
     console.log(`Server is running on port ${port}`);
-})
+  }).catch((err) => {
+    throw new Error("Server is shutting down....")
+  });;
+
