@@ -68,7 +68,8 @@ router.get("/order/:productId", async (req, res, next) => {
             O'lchami:${product.size}
             Uzunligi:${product.width}`;
 
-        await bot.telegram.sendMessage(process.env.NOTIFICATION_GROUP_ID, orderMessage)
+       const result = await bot.telegram.sendMessage(process.env.NOTIFICATION_GROUP_ID, orderMessage)
+       console.log(result);
 
         return res.status(200).send("New Product ordered");
 
