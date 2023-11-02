@@ -3,6 +3,7 @@ import cors from "cors"
 import { fileURLToPath } from "url";
 import https from "https";
 import fs from "fs";
+import http from "http";
 
 
 import { config } from "dotenv";
@@ -22,6 +23,8 @@ const __dirname = path.dirname(__filename);
 
 const cert = fs.readFileSync(path.join(__dirname, "certifications", "cert.pem"), "utf8");
 const key = fs.readFileSync(path.join(__dirname, "certifications", "key.pem"), "utf8");
+
+
 
 
 
@@ -46,13 +49,7 @@ app.get("*", (req, res) => {
 })
 
 
-// const port = process.env.PORT || 3333;
-
-
-const httpsServer = https.createServer({
-  key,
-  cert
-}, app);
+const port = process.env.PORT || 3333;
 
 (() => {
   bot.launch();
@@ -60,10 +57,24 @@ const httpsServer = https.createServer({
   // Enable graceful stop
   process.once("SIGINT", () => bot.stop("SIGINT"));
   process.once("SIGTERM", () => bot.stop("SIGTERM"));
-
   console.log(`Server is running on port`);
 })()
 
+
+
+
+const httpsServer = https.createServer({
+  key,
+  cert
+}, app);
+
 httpsServer.listen(443);
+
+
+http.createServer(app).listen(port);
+
+
+
+
 
 
