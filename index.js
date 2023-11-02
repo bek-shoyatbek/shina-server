@@ -30,23 +30,25 @@ bot.start(async (ctx) => {
   });
 
 
-  if (!ctx.session.user && ctx.chat.type == "private") {
-    await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
-      parse_mode: "Markdown",
-      reply_markup: {
-        one_time_keyboard: true,
-        resize_keyboard: true,
-        keyboard: [
-          [
-            {
-              text: "Jo'natish ",
-              request_contact: true,
-            },
+  if (ctx.chat.type == "private") {
+    if (!ctx.session.user) {
+      await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
+        parse_mode: "Markdown",
+        reply_markup: {
+          one_time_keyboard: true,
+          resize_keyboard: true,
+          keyboard: [
+            [
+              {
+                text: "Jo'natish ",
+                request_contact: true,
+              },
+            ],
           ],
-        ],
-        force_reply: true,
-      },
-    });
+          force_reply: true,
+        },
+      });
+    }
   } else {
     await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
   }

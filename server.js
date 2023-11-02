@@ -52,7 +52,7 @@ app.get("*", (req, res) => {
 const port = process.env.PORT || 3333;
 
 (() => {
-  bot.launch();
+  // bot.launch();
 
   // Enable graceful stop
   process.once("SIGINT", () => bot.stop("SIGINT"));
