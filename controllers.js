@@ -111,7 +111,17 @@ export const updateProductById = async (productId, updates) => {
   try {
     const product = await Product.findById(new mongoose.Types.ObjectId(productId));
     if (product) {
-      fs.unlinkSync("./public/images/" + product.image);
+      fs.access(product.image, fs.constants.F_OK, (err) => {
+        if (err) {
+          console.log(`${product.image} does not exist`);
+        } else {
+          if (product.image.startsWith("./public")) {
+            fs.unlinkSync(product.image);
+          } else {
+            fs.unlinkSync("./public/images/" + product.image);
+          }
+        }
+      });
     }
     const result = await Product.findByIdAndUpdate(new mongoose.Types.ObjectId(productId), updates)
     return result;
