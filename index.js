@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { Telegraf, Scenes, session, Markup } from "telegraf";
 import connectDb from "./connectDb.js";
 import axios from "axios";
+import { getUserOrders } from "./controllers.js";
 
 
 config();
@@ -65,9 +66,23 @@ bot.on("contact", async (ctx) => {
 });
 
 bot.hears("Buyurtmalarim", async (ctx) => {
-    await ctx.reply(`Buyurtmalaringizni bu guruhdan ko'rishingiz mumkun,
-    https://t.me/kaleso_uz_buyurtmalar
-`)
+  const userOrders = await getUserOrders(ctx.session.user, ctx.message.from.username);
+  if (userOrders.product.length > 0) {
+    userOrders.product.forEach(async product => {
+      let orderMessage =
+        `${product.full_name} ${product.id}
+      To'lov turi:${creditType}
+      Telefon :${userContact}
+      Telegram:@${username}
+      Narxi:${product.price_usd}
+      Kompaniyasi:${product.company}
+      Naqtga:${product.percent_cash}
+      Diametri:${product.diameter}
+      O'lchami:${product.size}
+      Uzunligi:${product.width}`;
+      await ctx.reply(orderMessage);
+    })
+  }
 });
 
 bot.catch(async (err, ctx) => {
@@ -88,9 +103,9 @@ bot.use(async (ctx, err) => {
   }
 });
 async function getData(ctx) {
-const req = await axios.get(API_URL + `/api/orders/${ctx.session.user}?username=${ctx.message.from.username}`)
-const res = await req.json()
-return res;
+  const req = await axios.get(API_URL + `/api/orders/${ctx.session.user}?username=${ctx.message.from.username}`)
+  const res = await req.json()
+  return res;
 }
 
 

@@ -75,14 +75,14 @@ export const updateProduct = async (productId, newProduct) => {
   }
 };
 
-export const getUserOrders = async (userContact,username) => {
+export const getUserOrders = async (userContact, username) => {
   try {
-    const userOrders = await Order.find({ 
-     $or:[
-	     {userContact:userContact},
-	     {username:username},
-     ]
-    });
+    const userOrders = await Order.find({
+      $or: [
+        { userContact: userContact },
+        { username: username },
+      ]
+    }).populate("product");
     return userOrders;
   } catch (err) {
     console.log(err);
