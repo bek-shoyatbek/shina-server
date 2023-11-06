@@ -59,7 +59,7 @@ router.get("/order/:productId", async (req, res, next) => {
         let orderMessage =
             `${product.full_name} ${product.id}
             To'lov turi:${creditType}
-            Telefon :+${userContact}
+            Telefon :${userContact}
             Telegram:@${username}
             Narxi:${product.price_usd}
             Kompaniyasi:${product.company}
@@ -81,7 +81,11 @@ router.get("/order/:productId", async (req, res, next) => {
 
 router.get("/orders/:userContact", async (req, res, next) => {
     try {
-        const userOrders = await getUserOrders(req.params.userContact);
+	const {username} = req.query;
+        const userOrders = await getUserOrders(req.params.userContact,username);
+        console.log("---------------------user orders-----------------------");
+	console.log(userOrders)
+	console.log("---------------------user orders-----------------------");
         if (!userOrders || !userOrders.length > 0) return res.status(204).send({ message: "no orders" });
         return res.status(200).send(userOrders);
     } catch (err) {

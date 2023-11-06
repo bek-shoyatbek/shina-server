@@ -1,8 +1,11 @@
 import { config } from "dotenv";
 import { Telegraf, Scenes, session, Markup } from "telegraf";
 import connectDb from "./connectDb.js";
+import axios from "axios";
+
 
 config();
+
 const token = process.env.TOKEN;
 
 
@@ -56,30 +59,16 @@ bot.start(async (ctx) => {
 
 
 bot.on("contact", async (ctx) => {
-  const contact = ctx.message.contact.phone_number;
-  ctx.session.user = contact;
-  await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
+  const userContact = ctx.message.contact.phone_number.toString().slice(4);
+  ctx.session.user = userContact;
+  await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${userContact}&username=${ctx.message.from.username}`)]).resize())
 });
 
 bot.hears("Buyurtmalarim", async (ctx) => {
-  const res = await fetch(API_URL + `/api/orders/${ctx.session.user}`, {
-    method: "GET",
-  });
-  if (res.status != 204) {
-    const orders = await res.json();
-    console.log(orders);
-  } else {
-    await ctx.reply("Sizda hozircha buyurtmalar mavjud emas");
-  }
+    await ctx.reply(`Buyurtmalaringizni bu guruhdan ko'rishingiz mumkun,
+    https://t.me/kaleso_uz_buyurtmalar
+`)
 });
-
-
-
-
-bot.on("my_chat_member", async (ctx) => {
-  console.log(ctx.chat.id);
-})
-
 
 bot.catch(async (err, ctx) => {
   if (err) {
@@ -98,6 +87,13 @@ bot.use(async (ctx, err) => {
     return;
   }
 });
+async function getData(ctx) {
+const req = await axios.get(API_URL + `/api/orders/${ctx.session.user}?username=${ctx.message.from.username}`)
+const res = await req.json()
+return res;
+}
+
+
 
 
 

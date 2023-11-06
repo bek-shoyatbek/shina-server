@@ -75,9 +75,14 @@ export const updateProduct = async (productId, newProduct) => {
   }
 };
 
-export const getUserOrders = async (userContact) => {
+export const getUserOrders = async (userContact,username) => {
   try {
-    const userOrders = await Order.find({ userContact: userContact });
+    const userOrders = await Order.find({ 
+     $or:[
+	     {userContact:userContact},
+	     {username:username},
+     ]
+    });
     return userOrders;
   } catch (err) {
     console.log(err);
