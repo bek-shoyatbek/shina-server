@@ -1,14 +1,14 @@
 import express from "express"
 import cors from "cors"
 import fs from "fs";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import http from "http";
 
 import { config } from "dotenv";
 
-import { bot } from "./index.js"
+import { bot } from "./bot.js"
 
-import path  from "path";
+import path from "path";
 
 const app = express();
 
@@ -42,7 +42,7 @@ app.get("*", (req, res) => {
 const port = process.env.PORT || 3333;
 
 (() => {
-   bot.launch();
+  bot.launch();
 
   // Enable graceful stop
   process.once("SIGINT", () => bot.stop("SIGINT"));

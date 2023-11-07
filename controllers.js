@@ -82,7 +82,9 @@ export const getUserOrders = async (userContact, username) => {
         { userContact: userContact },
         { username: username },
       ]
-    }).populate("product");
+    })
+      .populate("product")
+      .select("-__v");
     return userOrders;
   } catch (err) {
     console.log(err);

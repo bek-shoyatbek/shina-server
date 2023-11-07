@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { addProduct, deleteProduct, getAllProducts, getOneById, getUSDRate, getUserOrders, orderProduct, setUSDRate, updateProductById } from "./controllers.js";
-import { bot } from "./index.js";
+import { bot } from "./bot.js";
 import path from "path"
 
 export const router = express.Router();
@@ -68,8 +68,8 @@ router.get("/order/:productId", async (req, res, next) => {
             O'lchami:${product.size}
             Uzunligi:${product.width}`;
 
-       const result = await bot.telegram.sendMessage(process.env.NOTIFICATION_GROUP_ID, orderMessage)
-       console.log(result);
+        const result = await bot.telegram.sendMessage(process.env.NOTIFICATION_GROUP_ID, orderMessage)
+        console.log(result);
 
         return res.status(200).send("New Product ordered");
 
@@ -81,11 +81,11 @@ router.get("/order/:productId", async (req, res, next) => {
 
 router.get("/orders/:userContact", async (req, res, next) => {
     try {
-	const {username} = req.query;
-        const userOrders = await getUserOrders(req.params.userContact,username);
+        const { username } = req.query;
+        const userOrders = await getUserOrders(req.params.userContact, username);
         console.log("---------------------user orders-----------------------");
-	console.log(userOrders)
-	console.log("---------------------user orders-----------------------");
+        console.log(userOrders)
+        console.log("---------------------user orders-----------------------");
         if (!userOrders || !userOrders.length > 0) return res.status(204).send({ message: "no orders" });
         return res.status(200).send(userOrders);
     } catch (err) {

@@ -67,20 +67,34 @@ bot.on("contact", async (ctx) => {
 
 bot.hears("Buyurtmalarim", async (ctx) => {
   const userOrders = await getUserOrders(ctx.session.user, ctx.message.from.username);
-  if (userOrders.product.length > 0) {
-    userOrders.product.forEach(async product => {
-      let orderMessage =
-        `${product.full_name} ${product.id}
-      To'lov turi:${creditType}
-      Telefon :${userContact}
-      Telegram:@${username}
-      Narxi:${product.price_usd}
-      Kompaniyasi:${product.company}
-      Naqtga:${product.percent_cash}
-      Diametri:${product.diameter}
-      O'lchami:${product.size}
-      Uzunligi:${product.width}`;
-      await ctx.reply(orderMessage);
+
+  if (userOrders.length > 0) {
+    userOrders.forEach(async order => {
+      const product = order.product;
+      const creditType = order.creditType;
+      const userContact = order.userContact;
+      const username = order.username;
+      if (product) {
+        let orderMessage =
+          `
+        ${product.full_name}
+         To'lov turi: ${creditType} bo'lib to'lash
+         Telefon : ${userContact}
+         Telegram: @${username}
+         Narxi: ${product.price_usd}
+         Kompaniyasi: ${product.company}
+         Naqtga:${product.percent_cash}
+         Diametri:${product.diameter}
+         O'lchami:${product.size}
+         Uzunligi:${product.width}`;
+
+        await ctx.telegram.sendPhoto(
+          ctx.chat.id,
+          { source: './public/images/' + product.image },
+          { caption: orderMessage }
+        );
+      }
+
     })
   }
 });
