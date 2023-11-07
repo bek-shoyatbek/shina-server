@@ -33,28 +33,31 @@ bot.start(async (ctx) => {
     }
   });
 
-  if (ctx.chat.type == "private") {
-    if (!ctx.session.user) {
-      await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
-        parse_mode: "Markdown",
-        reply_markup: {
-          one_time_keyboard: true,
-          resize_keyboard: true,
-          keyboard: [
-            [
-              {
-                text: "Jo'natish ",
-                request_contact: true,
-              },
-            ],
-          ],
-          force_reply: true,
-        },
-      });
-    } else {
-      await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
-    }
-  }
+  await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=test&username=test`)]).resize())
+
+
+  // if (ctx.chat.type == "private") {
+  //   if (!ctx.session.user) {
+  //     await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
+  //       parse_mode: "Markdown",
+  //       reply_markup: {
+  //         one_time_keyboard: true,
+  //         resize_keyboard: true,
+  //         keyboard: [
+  //           [
+  //             {
+  //               text: "Jo'natish ",
+  //               request_contact: true,
+  //             },
+  //           ],
+  //         ],
+  //         force_reply: true,
+  //       },
+  //     });
+  //   } else {
+  //     await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize())
+  //   }
+  // }
 
 });
 
@@ -96,6 +99,8 @@ bot.hears("Buyurtmalarim", async (ctx) => {
       }
 
     })
+  } else {
+    return ctx.reply('Buyurtmalar topilmadi');
   }
 });
 
