@@ -1,13 +1,13 @@
 import express from "express"
 import cors from "cors"
-import fs from "fs";
+
 import { fileURLToPath } from "url";
 import http from "http";
 import morgan from  "morgan";
 
 import { config } from "dotenv";
 
-import { bot } from "./bot.js"
+import { bot } from "./bot.js";
 
 import path from "path";
 
