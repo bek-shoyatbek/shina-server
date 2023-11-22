@@ -30,6 +30,7 @@ app.use(cors({
 }))
 
 
+
 // Routes
 import { router } from "./routes.js";
 
@@ -42,6 +43,7 @@ app.use("/api", router);
 app.use("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 })
+
 
 
 const port = process.env.PORT || 3333;
