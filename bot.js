@@ -52,7 +52,7 @@ bot.start(async (ctx) => {
         },
       });
     } else {
-      await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${userContact}&username=${ctx.message.from.username}`)]).resize());
+      await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`)]).resize());
     }
   }
 
