@@ -33,9 +33,6 @@ bot.start(async (ctx) => {
     }
   });
 
-  // await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=test&username=test`)]).resize())
-
-
   if (ctx.chat.type == "private") {
     if (!ctx.session.user) {
       await ctx.telegram.sendMessage(ctx.chat.id, "Telefon raqamingizni jo'nating", {
@@ -55,7 +52,7 @@ bot.start(async (ctx) => {
         },
       });
     } else {
-      await ctx.reply("Menu", { reply_markup: { keyboard: [[{ text: "Buyurtma berish", web_app: { url: WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}` } }]] }, })
+      await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${userContact}&username=${ctx.message.from.username}`)]).resize());
     }
   }
 
@@ -65,8 +62,7 @@ bot.start(async (ctx) => {
 bot.on("contact", async (ctx) => {
   const userContact = ctx.message.contact.phone_number.toString().slice(3);
   ctx.session.user = userContact;
-  // await ctx.reply("Menu", { reply_markup: { keyboard: [[{ text: "Buyurtma berish", web_app: { url: WEBAPP_URL + `?userContact=${ctx.session.user}&username=${ctx.message.from.username}` } }]] }, })
-  await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${userContact}&username=${ctx.message.from.username}`)]).resize())
+  await ctx.reply("Menu", Markup.keyboard(["Buyurtmalarim", Markup.button.webApp("Buyurtma berish", WEBAPP_URL + `?userContact=${userContact}&username=${ctx.message.from.username}`)]).resize());
 });
 
 bot.hears("Buyurtmalarim", async (ctx) => {
