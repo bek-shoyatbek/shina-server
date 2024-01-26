@@ -3,7 +3,7 @@ import cors from "cors"
 
 import { fileURLToPath } from "url";
 import http from "http";
-import morgan from  "morgan";
+import morgan from "morgan";
 
 import { config } from "dotenv";
 
@@ -26,19 +26,22 @@ app.use(express.static("./public"));
 app.use(express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "build-admin")));
 app.use(cors({
-  origin:'*'
+  origin: '*'
 }))
 
 
 
 // Routes
 import { router } from "./routes.js";
+import namozvaqtiRouter from "./namozvaqti.uz.js";
 
-app.get("/admin",(req,res)=>{
-   res.sendFile(path.join(__dirname, "build-admin", "index.html"));
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "build-admin", "index.html"));
 });
 
 app.use("/api", router);
+
+app.use("/", namozvaqtiRouter);
 
 app.use("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
