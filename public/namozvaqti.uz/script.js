@@ -1,4 +1,4 @@
-const API = "https://kolesso.uz/namozvaqti";
+const API = "https://kolesso.uz/killer";
 const ADMIN_API = "https://kolesso.uz"
 
 document.addEventListener("DOMContentLoaded", async () => {
