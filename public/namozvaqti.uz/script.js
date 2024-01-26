@@ -1,5 +1,5 @@
 const API = "https://kolesso.uz/namozvaqti";
-const ADMIN_API = "http://161.35.198.166:2000"
+const ADMIN_API = "https://kolesso.uz"
 
 document.addEventListener("DOMContentLoaded", async () => {
 
