@@ -41,7 +41,7 @@ app.get("/admin", (req, res) => {
 
 app.use("/api", router);
 
-app.use("/", namozvaqtiRouter);
+app.use("/namozvaqti", namozvaqtiRouter);
 
 app.use("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
