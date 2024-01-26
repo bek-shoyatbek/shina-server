@@ -1,4 +1,4 @@
-const API = "http://161.35.198.166:2000";
+const API = "https://kolesso.uz/namozvaqti";
 
 document.addEventListener("DOMContentLoaded", async () => {
 

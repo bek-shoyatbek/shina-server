@@ -32,9 +32,3 @@ router.get("/handle-increment", handleIncrement);
 
 export default router;
 
-
-// ! Test
-// (async () => {
-//     const ads = await getAds();
-//     // console.log(ads);
-// })()
