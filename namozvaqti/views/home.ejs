@@ -104,7 +104,7 @@
         <% ads.forEach(function(ad) { %>
           <li class="card">
             <div class="image_container">
-              <img src="http://161.35.198.166:2000/images/<%= ad.image %>" alt="Ad image" />
+              <img src="https://kolesso.uz/images/<%= ad.image %>" alt="Ad image" />
               <% if (ad.active) { %>
                 <div class="overlay-text" id="active">Active</div>
                 <% } %>
@@ -170,7 +170,7 @@
                   confirmButtonText: "Yes, delete it!"
                 }).then(async (result) => {
                   if (result.isConfirmed) {
-                    await axios.delete(`/delete?id=${id}`)
+                    await axios.delete(`/killer/delete?id=${id}`)
                     Swal.fire({
                       title: "Deleted!",
                       text: "Your file has been deleted.",
