@@ -1,4 +1,5 @@
 const API = "https://kolesso.uz/namozvaqti";
+const ADMIN_API = "http://161.35.198.166:2000"
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     <div id="ad_text">
     <h2>${header.name}</h2>
     </div>
-    <img src="${API + "/images/" + header.image}" id="yandex_ad">
+    <img src="${ADMIN_API + "/images/" + header.image}" id="yandex_ad">
     </a>  
     `;
 
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const popupHtml = `
         <a href="${popup.link}" id="popup-link_${popup._id}" style="width:90%;height:90%;" target="_blank">
-          <img style="width:90%;height:90%;" src="${API + "/images/" + popup.image
+          <img style="width:90%;height:90%;" src="${ADMIN_API + "/images/" + popup.image
         }">
              <h1>${popup.name}</h1>
         </a>
