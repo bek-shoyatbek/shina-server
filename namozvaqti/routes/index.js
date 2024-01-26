@@ -40,7 +40,7 @@ router.post("/update/:id", upload.single("image"), editAd);
 
 router.get("/edit/:id", getEditPage);
 
-router.delete("/delete", authorizeUser, deleteAd);
+router.delete("/delete", deleteAd);
 
 
 // Handle views and clicks

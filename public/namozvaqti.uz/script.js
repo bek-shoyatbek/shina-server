@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log('Popup ', popup);
 
     const headerHtml = `
-    <a href="${header.link}" id="header_${header._id}"  target="_blank">
+    <a href="${header.link}" id="header_${header._id}" target="_blank">
     <div id="ad_text">
     <h2>${header.name}</h2>
     </div>
