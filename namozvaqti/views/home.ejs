@@ -1,0 +1,194 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+<style>
+  main {
+    padding: 20px;
+  }
+
+  .cards {
+    text-align: center;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px;
+    width: 300px;
+    position: relative;
+  }
+
+
+  .card img {
+    max-width: 100%;
+  }
+
+  .card .items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .card h3 {
+    margin: 0;
+  }
+
+  .card p {
+    margin: 5px 0;
+    font-size: 0.9em;
+  }
+
+  .card .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    margin-right: 2%;
+    top: 25px;
+    display: none;
+  }
+
+  .card:hover .actions {
+    display: block;
+  }
+
+  .card .actions button {
+    border: none;
+    border-radius: 5%;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    font-size: larger;
+    color: #090909;
+    margin: 0 5px;
+  }
+
+  .card .actions button:hover {
+    background-color: #373030;
+    color: #ddd;
+  }
+
+  .overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 20px;
+    text-align: center;
+  }
+</style>
+
+<body>
+  <%- include("navbar") %>
+
+    <main>
+      <ul class="cards">
+        <% ads.forEach(function(ad) { %>
+          <li class="card">
+            <div class="image_container">
+              <img src="http://161.35.198.166:2000/images/<%= ad.image %>" alt="Ad image" />
+              <% if (ad.active) { %>
+                <div class="overlay-text" id="active">Active</div>
+                <% } %>
+            </div>
+            <div class="items">
+              <h3>
+                <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i
+                    class="fa-solid fa-arrow-right"> </i></a>
+              </h3>
+              <h3>| <%= ad.location %> |</h3>
+              <p><i class="fa-regular fa-eye"></i> <%= ad.seen %> </p>
+              <p><i class="fa-solid fa-circle-play"></i> <%= ad.clicked %></p>
+            </div>
+            <div class="actions">
+              <% if(!ad.active) { %>
+                <button class="select btn" id="select_<%= ad._id %>">Select</button>
+                <% } else { %>
+                  <button class="select btn" id="deselect_<%= ad._id %>">Deselect</button>
+                  <% } %>
+                    <button class="edit btn" id="edit_<%= ad._id %>">Edit</button>
+                    <button class="delete btn" id="delete_<%= ad._id %>">Delete</button>
+            </div>
+          </li>
+          </div>
+          <% }) %>
+      </ul>
+    </main>
+    <script>
+      const buttons = document.querySelectorAll(".btn");
+      const actives = document.querySelectorAll("#active");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", async (event) => {
+          try {
+            const id = event.target.id.split("_")[1];
+            const action = event.target.id.split("_")[0];
+            const status = action == "deselect" ? false : true;
+            console.log(action)
+            switch (action) {
+              case "deselect":
+              const response = await axios.put(`/killer/active?id=${id}&active=${status}`);
+                if (response.status === 200) {
+                  window.location.reload();
+                }
+                break;     
+              case "select":
+                const res = await axios.put(`/killer/active?id=${id}&active=${status}`);
+                if (res.status === 200) {
+                  window.location.reload();
+                }
+                break;
+              case "edit":
+                window.location.href = "/killer/edit/" + id;
+                break;
+              case "delete":
+                Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!"
+                }).then(async (result) => {
+                  if (result.isConfirmed) {
+                    await axios.delete(`/delete?id=${id}`)
+                    Swal.fire({
+                      title: "Deleted!",
+                      text: "Your file has been deleted.",
+                      icon: "success"
+                    });
+                    window.location.reload();
+                  }
+                }).catch(err => {
+                  console.log(err);
+                })
+                break;
+            }
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      })
+    </script>
+</body>
+
+</html>
