@@ -21,24 +21,24 @@ router.get("/login", getLogin);
 router.post("/login", login);
 
 // Home
-router.get("/home", authorizeUser, getHome);
+router.get("/home", getHome);
 
 
 // Add 
-router.get("/add", authorizeUser, getAddPage);
+router.get("/add", getAddPage);
 
 
 router.get("/get-ads", getAds);
 
-router.post("/add", authorizeUser, upload.single("image"), add);
+router.post("/add", upload.single("image"), add);
 
 // Edit 
 
-router.put("/active", authorizeUser, setActiveAd);
+router.put("/active", setActiveAd);
 
-router.post("/update/:id", authorizeUser, upload.single("image"), editAd);
+router.post("/update/:id", upload.single("image"), editAd);
 
-router.get("/edit/:id", authorizeUser, getEditPage);
+router.get("/edit/:id", getEditPage);
 
 router.delete("/delete", authorizeUser, deleteAd);
 

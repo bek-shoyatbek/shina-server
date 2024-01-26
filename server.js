@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(morgan("short"));
 app.use(express.static("./public"));
 app.use(express.static(path.join(__dirname, "build")));
@@ -34,7 +34,7 @@ app.use(expressSession({
   secret: process.env.SESSION_SECRET,
   resave: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
+    maxAge: 1000 * 60 * 60 * 24 // 6 day
   },
   saveUninitialized: false
 }));
