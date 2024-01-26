@@ -4,6 +4,6 @@ export default function authorizeUser(req, res, next) {
         next();
     }
     else {
-        res.redirect(400, "/login");
+        res.redirect(400, "/killer/login");
     }
 }

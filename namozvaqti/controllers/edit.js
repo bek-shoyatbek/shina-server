@@ -29,7 +29,7 @@ export const editAd = async (req, res, next) => {
         }
 
         const { name, link, location } = req.body;
-        console.log(name, link, location);
+    
         const updatedAd = await Ad.findOneAndUpdate({ _id: req.params.id }, { name, link, image: image || currentAd.image, location });
 
         if (!updatedAd) throw new AppError('No such advertisement found', 400);
