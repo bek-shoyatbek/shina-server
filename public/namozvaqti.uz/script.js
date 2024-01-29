@@ -60,9 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         popper.innerHTML = popperHtml;
 
 
-        function closeModal() {
-            popper.style.display = "none";
-        }
+
 
         if (popupTimer !== today.toString()) {
             popper.style.display = "block";
@@ -75,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Hide modal after 6 seconds
             setTimeout(function () {
-                modal.style.display = "none";
+                popper.style.display = "none";
             }, 6000);
             localStorage.setItem("popupShown", today.toString());
 
@@ -122,6 +120,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
 });
+
+function closeModal() {
+    popper.style.display = "none";
+}
 
 
 // functions
