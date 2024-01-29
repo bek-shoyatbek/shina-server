@@ -43,21 +43,21 @@
 
 /* Popper */
 @media (max-width: 768px) {
-  .modal-content {
+  .popper-content {
     width: 90%;
   }
 }
 
 /* Adjust padding for smaller screens */
 @media (max-width: 500px) {
-  .modal-content {
+  .popper-content {
     padding: 10px;
   }
 }
 
 /* Full width image on small screens */
 @media (max-width: 768px) {
-  .modal-content img {
+  .popper-content img {
     width: 100%;
   }
 }
@@ -75,14 +75,14 @@
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal-content {
+.popper-content {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
 }
 
-.modal-content button {
+.popper-content button {
   display: inline-block;
   padding: 10px 15px;
   border: 1px solid #eee;

@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (popup) {
         const popperHtml = `
-    <div class="modal-content">
+    <div class="popper-content">
     <a href="${popup.link}" target="_blank" id="popup-link_${popup._id}">
     <img src="${AD_API + "/images/" + popup.image}" alt="Image" /></a>
     <button id="btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
