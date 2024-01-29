@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 },
                 allowOutsideClick: false,
                 cancelButtonText: "Yopish",
+                confirmButtonClass: "confirm_button_class",
                 timer: 7000,
                 showCancelButton: true,
                 showConfirmButton: false,

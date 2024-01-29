@@ -44,3 +44,9 @@
 .transparent-popup {
   background: transparent !important;
 }
+
+.confirm_button_class {
+  color: green !important;
+  font-size: 20px !important;
+  background-color: #ddd;
+}
