@@ -28,6 +28,7 @@
 
 #ads_img {
   width: 100%;
+  max-width: 100%;
   height: auto;
   max-height: 110px;
   object-fit: cover;
