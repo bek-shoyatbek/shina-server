@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const body = document.querySelector("body");
     const adHeader = document.getElementById("ads");
-    const popper = document.getElementById("popper");
 
     const ads = await getAds();
 
@@ -49,63 +48,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         adHeader.innerHTML = headerHtml;
     }
-    if (popup) {
-        const popperHtml = `
-    <div class="popper-content">
-    <a href="${popup.link}" target="_blank" id="popup-link_${popup._id}">
-    <img src="${AD_API + "/images/" + popup.image}" alt="Image" /></a>
-    <button id="btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-    </div>`;
-
-        popper.innerHTML = popperHtml;
 
 
 
-
-        if (popupTimer !== today.toString()) {
-            popper.style.display = "block";
-            const btn = document.getElementById("btn");
-            btn.style.display = 'none';
-            // show modal after 3 seconds
-            setTimeout(function () {
-                btn.style.display = "block";
-            }, 3000);
-
-            // Hide modal after 6 seconds
-            setTimeout(function () {
-                popper.style.display = "none";
-            }, 6000);
-            localStorage.setItem("popupShown", today.toString());
-
-        }
-    } else {
-        popper.style.display = "none";
-        body.removeChild(popper);
-
+    const popupHtml = `
+        <a href="${popup.link}" id="popup-link_${popup._id}" style="max-width:100%;height:auto;" target="_blank">
+          <img style="max-width:100%;height:auto;" src="${AD_API + "/images/" + popup.image
+        }">
+             <h1>${popup.name}</h1>
+        </a>
+      `;
+    console.log(`Popup timer ${popupTimer}`, `Today ${today.toString()}`);
+    if (popupTimer !== today.toString()) {
+        console.log("Popup is being showed....");
+        localStorage.setItem("popupShown", today.toString());
+        swal.fire({
+            html: popupHtml,
+            allowOutsideClick: false,
+            cancelButtonText: "Yopish",
+            timer: 4000,
+            showCancelButton: true,
+            showConfirmButton: false,
+        });
     }
-
-
-
-    // const popupHtml = `
-    //     <a href="${popup.link}" id="popup-link_${popup._id}" style="width:90%;height:90%;" target="_blank">
-    //       <img style="width:90%;height:90%;" src="${AD_API + "/images/" + popup.image
-    //     }">
-    //          <h1>${popup.name}</h1>
-    //     </a>
-    //   `;
-    // console.log(`Popup timer ${popupTimer}`, `Today ${today.toString()}`);
-    // if (popupTimer !== today.toString()) {
-    //     console.log("Popup is being showed....");
-    // localStorage.setItem("popupShown", today.toString());
-    //     swal.fire({
-    //         html: popupHtml,
-    //         allowOutsideClick: false,
-    //         cancelButtonText: "Yopish",
-    //         timer: 4000,
-    //         showCancelButton: true,
-    //         showConfirmButton: false,
-    //     });
-    // }
 
 
     const headerAd = document.getElementById("header_" + header._id);
