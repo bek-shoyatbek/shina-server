@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             popup = e;
         }
     });
-    console.log(header);
     if (!header) {
         body.removeChild(adHeader);
     }
@@ -59,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
 
     if (popupTimer !== today.toString()) {
+        console.log("Popup is being showed....");
         localStorage.setItem("popupShown", today.toString());
         swal.fire({
             html: popupHtml,
