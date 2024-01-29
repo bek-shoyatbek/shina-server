@@ -50,26 +50,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+    if (popup) {
 
-    const popupHtml = `
+        const popupHtml = `
         <a href="${popup.link}" id="popup-link_${popup._id}" style="max-width:100%;height:auto;" target="_blank">
           <img style="max-width:100%;height:auto;" src="${AD_API + "/images/" + popup.image
-        }">
+            }">
              <h1>${popup.name}</h1>
         </a>
       `;
-    console.log(`Popup timer ${popupTimer}`, `Today ${today.toString()}`);
-    if (popupTimer !== today.toString()) {
-        console.log("Popup is being showed....");
-        localStorage.setItem("popupShown", today.toString());
-        swal.fire({
-            html: popupHtml,
-            allowOutsideClick: false,
-            cancelButtonText: "Yopish",
-            timer: 4000,
-            showCancelButton: true,
-            showConfirmButton: false,
-        });
+
+        if (popupTimer !== today.toString()) {
+            console.log("Popup is being showed....");
+            localStorage.setItem("popupShown", today.toString());
+            swal.fire({
+                html: popupHtml,
+                allowOutsideClick: false,
+                cancelButtonText: "Yopish",
+                timer: 4000,
+                showCancelButton: true,
+                showConfirmButton: false,
+            });
+        }
     }
 
 
