@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             html: popupHtml,
             allowOutsideClick: false,
             cancelButtonText: "Yopish",
-            timer: 2000,
+            timer: 4000,
             showCancelButton: true,
             showConfirmButton: false,
         });
