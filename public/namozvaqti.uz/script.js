@@ -1,5 +1,4 @@
-const API = "https://kolesso.uz/killer";
-const ADMIN_API = "https://kolesso.uz"
+const AD_API = "https://kolesso.uz";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -8,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const popupTimer = localStorage.getItem("popupShown");
 
     const body = document.querySelector("body");
-    const adHeader = document.getElementById("ad_header");
+    const adHeader = document.getElementById("ads");
 
     const ads = await getAds();
 
@@ -45,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     <div id="ad_text">
     <h2>${header.name}</h2>
     </div>
-    <img src="${ADMIN_API + "/images/" + header.image}" id="yandex_ad">
+    <img src="${AD_API + "/images/" + header.image}" id="ads_img">
     </a>  
     `;
 
@@ -53,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const popupHtml = `
         <a href="${popup.link}" id="popup-link_${popup._id}" style="width:90%;height:90%;" target="_blank">
-          <img style="width:90%;height:90%;" src="${ADMIN_API + "/images/" + popup.image
+          <img style="width:90%;height:90%;" src="${AD_API + "/images/" + popup.image
         }">
              <h1>${popup.name}</h1>
         </a>
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function handleIncrement(id, prop) {
     try {
         const response = await axios.get(
-            `${API}/handle-increment?id=${id}&prop=${prop}`
+            `${AD_API}/killer/handle-increment?id=${id}&prop=${prop}`
         );
 
         return response.data;
@@ -101,7 +100,7 @@ async function handleIncrement(id, prop) {
 
 async function getAds() {
     try {
-        const ads = await axios.get(API + "/get-ads");
+        const ads = await axios.get(API + "/killer/get-ads");
 
         return ads.data;
     } catch (err) {
