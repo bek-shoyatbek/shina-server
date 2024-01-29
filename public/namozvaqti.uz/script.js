@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
              <h1>${popup.name}</h1>
         </a>
       `;
-
+    console.log(`Popup timer ${popupTimer}`, `Today ${today.toString()}`);
     if (popupTimer !== today.toString()) {
         console.log("Popup is being showed....");
         localStorage.setItem("popupShown", today.toString());
