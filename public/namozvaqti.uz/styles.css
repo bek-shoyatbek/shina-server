@@ -40,3 +40,7 @@
   text-decoration: none;
   z-index: 999;
 }
+
+.transparent-popup {
+  background: transparent !important;
+}

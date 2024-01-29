@@ -61,11 +61,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
 
         if (popupTimer !== today.toString()) {
-            console.log("Popup is being showed....");
             localStorage.setItem("popupShown", today.toString());
             swal.fire({
                 html: popupHtml,
-                backdrop: "transparent",
+                customClass: {
+                    popup: "transparent-popup",
+                },
                 allowOutsideClick: false,
                 cancelButtonText: "Yopish",
                 timer: 7000,
