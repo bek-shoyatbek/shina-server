@@ -50,8 +50,8 @@
 }
 
 .popup_text {
-  text-decoration: none;
   color: green !important;
   font-size: 20px !important;
-  background-color: #ddd;
+  text-decoration: none;
+  background-color: #ffffff;
 }
