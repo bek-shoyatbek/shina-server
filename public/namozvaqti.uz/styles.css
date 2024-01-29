@@ -44,8 +44,12 @@
 .transparent-popup {
   background: transparent !important;
 }
+.my-cancel {
+  color: purple;
+  background: #ddd;
+}
 
-.confirm_button_class {
+.popup_text {
   color: green !important;
   font-size: 20px !important;
   background-color: #ddd;

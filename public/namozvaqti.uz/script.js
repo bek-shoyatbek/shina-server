@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <a href="${popup.link}" id="popup-link_${popup._id}" style="max-width:100%;height:auto;" target="_blank">
           <img style="max-width:100%;height:auto;" src="${AD_API + "/images/" + popup.image
             }">
-             <h1>${popup.name}</h1>
+             <h1 class="popup_text">${popup.name}</h1>
         </a>
       `;
 
@@ -69,7 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 },
                 allowOutsideClick: false,
                 cancelButtonText: "Yopish",
-                confirmButtonClass: "confirm_button_class",
                 timer: 7000,
                 showCancelButton: true,
                 showConfirmButton: false,
