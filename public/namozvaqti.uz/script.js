@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             popup = e;
         }
     });
-    
-    if (ads.length == 0 || !header) {
+    console.log(header);
+    if (!header) {
         body.removeChild(adHeader);
     }
 
