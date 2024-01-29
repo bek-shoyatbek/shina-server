@@ -38,16 +38,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log('Header ', header);
     console.log('Popup ', popup);
 
-    const headerHtml = `
-    <a href="${header.link}" id="header_${header._id}" target="_blank">
-    <div id="ad_text">
-    <h2>${header.name}</h2>
-    </div>
-    <img src="${AD_API + "/images/" + header.image}" id="ads_img">
-    </a>  
-    `;
+    if (header) {
+        const headerHtml = `
+        <a href="${header.link}" id="header_${header._id}" target="_blank">
+        <div id="ad_text">
+        <h2>${header.name}</h2>
+        </div>
+        <img src="${AD_API + "/images/" + header.image}" id="ads_img">
+        </a>  
+        `;
 
-    adHeader.innerHTML = headerHtml;
+        adHeader.innerHTML = headerHtml;
+    }
 
     const popupHtml = `
         <a href="${popup.link}" id="popup-link_${popup._id}" style="width:90%;height:90%;" target="_blank">
