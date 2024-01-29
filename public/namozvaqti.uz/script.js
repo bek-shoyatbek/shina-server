@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("popupShown", today.toString());
             swal.fire({
                 html: popupHtml,
+                backdrop: "transparent",
                 allowOutsideClick: false,
                 cancelButtonText: "Yopish",
                 timer: 7000,
