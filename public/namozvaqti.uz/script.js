@@ -101,7 +101,7 @@ async function handleIncrement(id, prop) {
 
 async function getAds() {
     try {
-        const ads = await axios.get(API + "/killer/get-ads");
+        const ads = await axios.get(AD_API + "/killer/get-ads");
 
         return ads.data;
     } catch (err) {
