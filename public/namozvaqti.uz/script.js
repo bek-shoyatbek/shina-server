@@ -11,9 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const ads = await getAds();
 
-    if (ads.length == 0) {
-        body.removeChild(adHeader);
-    }
     let header;
     let popup;
     ads.forEach((e) => {
@@ -24,7 +21,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             popup = e;
         }
     });
-
+    
+    if (ads.length == 0 || !header) {
+        body.removeChild(adHeader);
+    }
 
     if (header) {
         const result = await handleIncrement(header._id, "seen");
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             html: popupHtml,
             allowOutsideClick: false,
             cancelButtonText: "Yopish",
+            timer: 2000,
             showCancelButton: true,
             showConfirmButton: false,
         });
