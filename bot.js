@@ -67,7 +67,7 @@ bot.on("contact", async (ctx) => {
 
 bot.hears("Buyurtmalarim", async (ctx) => {
   const userOrders = await getUserOrders(ctx.session.user, ctx.message.from.username);
-
+  const currency  = await getCurrency();
   if (userOrders.length > 0) {
     userOrders.forEach(async order => {
       const product = order.product;
@@ -81,9 +81,8 @@ bot.hears("Buyurtmalarim", async (ctx) => {
          To'lov turi: ${creditType} bo'lib to'lash
          Telefon : ${userContact}
          Telegram: @${username}
-         Narxi: ${product.price_usd}
+         Narxi: ${(parseFloat(product.price_usd) * currency).toFixed(2)} so'm
          Kompaniyasi: ${product.company}
-         Naqtga:${product.percent_cash}
          Diametri:${product.diameter}
          O'lchami:${product.size}
          Uzunligi:${product.width}`;
@@ -125,6 +124,10 @@ async function getData(ctx) {
 }
 
 
-
+async function getCurrency(){
+   const res = await axios.get(API_URL + "/api/currency");
+   const currency = res.data.data.val;
+   return currency;
+}
 
 

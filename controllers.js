@@ -68,7 +68,7 @@ export const addProducts = async (data) => {
 
 export const updateProduct = async (productId, newProduct) => {
   try {
-    console.log(productId, newProduct)
+  
     let product = await Product.updateOne({ _id: new mongoose.Types.ObjectId(productId) }, newProduct[0]);
   } catch (err) {
     console.log(err);

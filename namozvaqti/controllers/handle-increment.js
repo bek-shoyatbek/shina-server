@@ -6,7 +6,6 @@ export const handleIncrement = async (req, res, next) => {
         const { id, prop } = req.query;
         if (!id || !prop) throw new AppError('Missing parameter: "id" or "prop"');
 
-        console.log(id, prop);
         let result;
         if (prop == "clicked") {
             result = await Ad.findOneAndUpdate({ _id: id }, { $inc: { clicked: 1 } }).exec();
