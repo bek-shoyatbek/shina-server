@@ -54,7 +54,7 @@ router.get("/order/:productId", async (req, res, next) => {
             productId,
             creditType
         };
-        const newOrder = await orderProduct(credentials);
+        await orderProduct(credentials);
         const product = await getOneById(productId);
         let orderMessage =
             `${product.full_name} ${product.id}

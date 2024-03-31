@@ -1,163 +1,151 @@
-<!-- @format -->
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-  </head>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    /* Fonts */
-    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
 
-    body {
-      font-family: "Open Sans", sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background: #f2f2f2;
-      background-image: url("https://images.unsplash.com/photo-1500964757637-c85e8a162699?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHdlYnNpdGUlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww");
-      background-size: cover;
-      background-position: center;
-    }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+  /* Fonts */
+  @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
 
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-    }
+  body {
+    font-family: "Open Sans", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #f2f2f2;
+    background-image: url("https://images.unsplash.com/photo-1500964757637-c85e8a162699?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHdlYnNpdGUlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww");
+    background-size: cover;
+    background-position: center;
+  }
 
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* White background */
+    background: white;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    /* Fixed position */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin: 10px auto;
+    max-width: 300px;
+  }
+
+  button {
+    width: 110%;
+    padding: 14px;
+    border: none;
+    margin: 10px auto;
+    max-width: 300px;
+    border-radius: 5px;
+    background: #3498db;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+
+  @media (max-width: 500px) {
     form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      /* White background */
-      background: white;
-      max-width: 300px;
-      margin: 0 auto;
-      padding: 50px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-      /* Fixed position */
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      width: 90%;
+      margin: 20px auto;
     }
+  }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  .error {
+    color: red;
+    margin-bottom: 10px;
+  }
+</style>
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+<body>
+  <form>
+    <label for="username">Username:</label>
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      margin: 10px auto;
-      max-width: 300px;
-    }
+    <input type="text" id="username" name="username" autocomplete="on" required />
 
-    button {
-      width: 110%;
-      padding: 14px;
-      border: none;
-      margin: 10px auto;
-      max-width: 300px;
-      border-radius: 5px;
-      background: #3498db;
-      color: #fff;
-      text-align: center;
-      text-transform: uppercase;
-      font-size: 16px;
-    }
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" autocomplete="on" required />
 
-    @media (max-width: 500px) {
-      form {
-        width: 90%;
-        margin: 20px auto;
-      }
-    }
+    <button type="submit" id="submit">Login</button>
+  </form>
+  <script>
+    // const API_URL = "https://kolesso.uz/killer";
+    const API_URL = 'http://localhost:3333/killer';
+    const submit = document.getElementById("submit");
+    const username = document.querySelector("#username");
+    const password = document.querySelector("#password");
 
-    .error {
-      color: red;
-      margin-bottom: 10px;
-    }
-  </style>
-  <body>
-    <form>
-      <label for="username">Username:</label>
+    username.focus();
 
-      <input
-        type="text"
-        id="username"
-        name="username"
-        autocomplete="on"
-        required
-      />
-
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        autocomplete="on"
-        required
-      />
-
-      <button type="submit" id="submit">Login</button>
-    </form>
-    <script>
-      const API_URL = "https://kolesso.uz/killer";
-      const submit = document.getElementById("submit");
-      const username = document.querySelector("#username");
-      const password = document.querySelector("#password");
-
-      username.focus();
-
-      submit.addEventListener("click", async (e) => {
-        try {
-          e.preventDefault();
-          const res = await axios.post(
-            API_URL + "/killer/login",
-            {
-              password: password.value,
-              username: username.value,
+    submit.addEventListener("click", async (e) => {
+      try {
+        e.preventDefault();
+        const res = await axios.post(
+          API_URL + "/killer/login", {
+            password: password.value,
+            username: username.value,
+          }, {
+            headers: {
+              "Content-Type": "application/json",
             },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          if (res.status == 200) {
-            window.location.href = "/killer/home";
           }
-        } catch (err) {
-          if (err.response.status == 401) {
-            alert(err.response.data);
-          } else {
-            console.error(err.response);
-          }
+        );
+        if (res.status == 200) {
+          window.location.href = "/killer/home";
         }
-      });
-    </script>
-  </body>
+      } catch (err) {
+        if (err.response.status == 401) {
+          alert(err.response.data);
+        } else {
+          console.error(err.response);
+        }
+      }
+    });
+  </script>
+</body>
+
 </html>
