@@ -39,6 +39,7 @@ app.set("view engine", "ejs");
 
 // Routes
 import { router } from "./routes.js";
+import { router as locationRoutes } from "./routes/location.routes.js";
 
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "build-admin", "index.html"));
@@ -46,6 +47,8 @@ app.get("/admin", (req, res) => {
 
 
 app.use("/api", router);
+
+app.use("/locations", locationRoutes);
 
 
 app.use("*", (req, res) => {
