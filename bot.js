@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { Telegraf, Scenes, session, Markup } from "telegraf";
+import { Telegraf, session, Markup } from "telegraf";
 import connectDb from "./connectDb.js";
 import axios from "axios";
 import { getUserOrders } from "./controllers.js";
@@ -8,10 +8,7 @@ import { getUserOrders } from "./controllers.js";
 config();
 
 const token = process.env.TOKEN;
-
-
 const API_URL = process.env.API_URL;
-
 const WEBAPP_URL = process.env.WEBAPP_URL;
 
 connectDb();
@@ -67,7 +64,7 @@ bot.on("contact", async (ctx) => {
 
 bot.hears("Buyurtmalarim", async (ctx) => {
   const userOrders = await getUserOrders(ctx.session.user, ctx.message.from.username);
-  const currency  = await getCurrency();
+  const currency = await getCurrency();
   if (userOrders.length > 0) {
     userOrders.forEach(async order => {
       const product = order.product;
@@ -124,10 +121,10 @@ async function getData(ctx) {
 }
 
 
-async function getCurrency(){
-   const res = await axios.get(API_URL + "/api/currency");
-   const currency = res.data.data.val;
-   return currency;
+async function getCurrency() {
+  const res = await axios.get(API_URL + "/api/currency");
+  const currency = res.data.data.val;
+  return currency;
 }
 
 

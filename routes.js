@@ -83,9 +83,7 @@ router.get("/orders/:userContact", async (req, res, next) => {
     try {
         const { username } = req.query;
         const userOrders = await getUserOrders(req.params.userContact, username);
-        console.log("---------------------user orders-----------------------");
-        console.log(userOrders)
-        console.log("---------------------user orders-----------------------");
+
         if (!userOrders || !userOrders.length > 0) return res.status(204).send({ message: "no orders" });
         return res.status(200).send(userOrders);
     } catch (err) {

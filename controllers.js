@@ -1,8 +1,8 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Con from "./models/concurrency.model.js";
 import Product from "./models/product.model.js";
-import Order from "./models/order.model.js"
-import fs from "fs"
+import Order from "./models/order.model.js";
+import fs from "fs";
 
 export const getUSDRate = async () => {
   try {
@@ -68,8 +68,7 @@ export const addProducts = async (data) => {
 
 export const updateProduct = async (productId, newProduct) => {
   try {
-  
-    let product = await Product.updateOne({ _id: new mongoose.Types.ObjectId(productId) }, newProduct[0]);
+    await Product.updateOne({ _id: new mongoose.Types.ObjectId(productId) }, newProduct[0]);
   } catch (err) {
     console.log(err);
   }
