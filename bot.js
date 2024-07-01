@@ -61,6 +61,7 @@ bot.start(async (ctx) => {
             WEBAPP_URL +
               `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`
           ),
+          "Manzillarimiz📍",
         ]).resize()
       );
     }
@@ -79,7 +80,7 @@ bot.on("contact", async (ctx) => {
         WEBAPP_URL +
           `?userContact=${userContact}&username=${ctx.message.from.username}`
       ),
-      "Locations📍",
+      "Manzillarimiz📍",
     ]).resize()
   );
 });
@@ -121,7 +122,7 @@ bot.hears("Buyurtmalarim", async (ctx) => {
 });
 
 // Handler for the "Locations📍" button
-bot.hears("Locations📍", async (ctx) => {
+bot.hears("Manzillarimiz📍", async (ctx) => {
   try {
     const locations = await fetchLocations(API_URL);
 
@@ -145,8 +146,8 @@ bot.hears("Locations📍", async (ctx) => {
 bot.on("text", async (ctx) => {
   const messageText = ctx.message.text;
 
-  // Skip if the message is "Locations📍" as it's handled separately
-  if (messageText === "Locations📍") return;
+  // Skip if the message is "Manzillarimiz📍" as it's handled separately
+  if (messageText === "Manzillarimiz📍") return;
 
   try {
     const locations = await fetchLocations();
