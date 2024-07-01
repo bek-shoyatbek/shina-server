@@ -45,6 +45,7 @@ import { router } from "./routes.js";
 import { router as locationRoutes } from "./routes/location.routes.js";
 
 app.get("/admin", (req, res) => {
+  console.log("admin page");
   res.sendFile(path.join(__dirname, "build-admin", "index.html"));
 });
 
@@ -53,6 +54,7 @@ app.use("/api", router);
 app.use("/locations", locationRoutes);
 
 app.use("*", (req, res) => {
+  console.log("users page");
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
