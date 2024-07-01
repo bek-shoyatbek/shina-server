@@ -114,11 +114,6 @@ bot.use(async (ctx, err) => {
     return;
   }
 });
-async function getData(ctx) {
-  const req = await axios.get(API_URL + `/api/orders/${ctx.session.user}?username=${ctx.message.from.username}`)
-  const res = await req.json()
-  return res;
-}
 
 
 async function getCurrency() {
