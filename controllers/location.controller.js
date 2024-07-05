@@ -9,8 +9,8 @@ export const getAllLocations = async (req, res, next) => {
 
 export const addNewLocation = async (req, res, next) => {
   try {
-    const { name, link } = req.body;
-    const newLocation = await LocationModel.create({ name, link });
+    const { name, link, region } = req.body;
+    const newLocation = await LocationModel.create({ name, link, region });
     res.status(201).send({ message: "Successfully added", data: newLocation });
     return;
   } catch (err) {

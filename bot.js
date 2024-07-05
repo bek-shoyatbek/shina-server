@@ -6,6 +6,7 @@ import { getUserOrders } from "./controllers.js";
 import { fetchLocations } from "./helpers/bot/get-all-locations.js";
 import { isValidUrl } from "./helpers/bot/is-valid-url.js";
 import { parseCoordinates } from "./helpers/bot/parse-coordinates.js";
+import { groupLocationsByRegion } from "./helpers/bot/group-locations.js";
 
 config();
 
@@ -125,65 +126,88 @@ bot.hears("Buyurtmalarim", async (ctx) => {
 bot.hears("Manzillarimiz📍", async (ctx) => {
   try {
     const locations = await fetchLocations(API_URL);
+    const locationsByRegion = groupLocationsByRegion(locations);
 
-    if (locations.length === 0) {
-      return ctx.reply("No locations found.");
+    if (Object.keys(locationsByRegion).length === 0) {
+      return ctx.reply("No regions or locations found.");
     }
 
     const keyboard = Markup.keyboard(
-      locations.map((loc) => [loc.name]),
+      Object.keys(locationsByRegion).map((region) => [region]),
       { columns: 2 }
     ).resize();
 
-    await ctx.reply("Choose a location:", keyboard);
+    await ctx.reply("Choose a region:", keyboard);
+
+    // Store the grouped locations in session for later use
+    ctx.session = { ...ctx.session, locationsByRegion };
   } catch (err) {
     console.error("Error in Locations📍 handler:", err);
     await ctx.reply("Sorry, there was an error fetching locations.");
   }
 });
 
-// Handler for all text messages
-bot.on("text", async (ctx) => {
+// Handler for region selection
+bot.hears(/.+/, async (ctx) => {
+  const selectedRegion = ctx.message.text;
+  const { locationsByRegion } = ctx.session || {};
+
+  if (locationsByRegion && locationsByRegion[selectedRegion]) {
+    const locationsInRegion = locationsByRegion[selectedRegion];
+    const keyboard = Markup.keyboard(
+      locationsInRegion.map((loc) => [loc.name]),
+      { columns: 2 }
+    ).resize();
+
+    await ctx.reply(`Choose a location in ${selectedRegion}:`, keyboard);
+
+    // Store the selected region in session
+    ctx.session = { ...ctx.session, selectedRegion };
+  } else {
+    // This might be a location name, so let's check
+    await handlePossibleLocation(ctx);
+  }
+});
+
+// Function to handle possible location selection
+async function handlePossibleLocation(ctx) {
   const messageText = ctx.message.text;
+  const { locationsByRegion, selectedRegion } = ctx.session || {};
 
-  // Skip if the message is "Manzillarimiz📍" as it's handled separately
-  if (messageText === "Manzillarimiz📍") return;
+  if (!locationsByRegion || !selectedRegion) {
+    return; // Exit if we don't have the necessary session data
+  }
 
-  try {
-    const locations = await fetchLocations();
-    const location = locations.find(
-      (loc) => loc.name.toLowerCase() === messageText.toLowerCase()
-    );
+  const locationsInRegion = locationsByRegion[selectedRegion];
+  const location = locationsInRegion.find(
+    (loc) => loc.name.toLowerCase() === messageText.toLowerCase()
+  );
 
-    if (location) {
-      try {
-        if (isValidUrl(location.link)) {
-          await ctx.reply(`${location.name}: ${location.link}`);
-        }
+  if (location) {
+    try {
+      if (isValidUrl(location.link)) {
+        await ctx.reply(`${location.name}: ${location.link}`);
+      } else {
         const coords = parseCoordinates(location.link);
-        console.log("coords", coords);
         if (coords) {
           await ctx.replyWithLocation(coords.latitude, coords.longitude);
         } else {
           await ctx.reply(`Unable to process location for ${location.name}.`);
         }
-      } catch (err) {
-        console.error(`Error sending location ${location.name}:`, err);
-        await ctx.reply(
-          `Sorry, there was an error sending the location for ${location.name}.`
-        );
       }
-    } else {
-      // Optional: respond if the message doesn't match any location
+    } catch (err) {
+      console.error(`Error sending location ${location.name}:`, err);
       await ctx.reply(
-        "I didn't recognize that location name. Try pressing the Locations📍 button to see available locations."
+        `Sorry, there was an error sending the location for ${location.name}.`
       );
     }
-  } catch (err) {
-    console.error("Error processing message:", err);
-    await ctx.reply("Sorry, there was an error processing your message.");
+  } else {
+    // Optional: respond if the message doesn't match any location
+    await ctx.reply(
+      "I didn't recognize that location name. Please choose from the provided options."
+    );
   }
-});
+}
 
 bot.catch(async (err, ctx) => {
   if (err) {
