@@ -1,12 +1,18 @@
 import { config } from "dotenv";
 import { Telegraf, session, Markup } from "telegraf";
-import connectDb from "./connectDb.js";
-import axios from "axios";
-import { getUserOrders } from "./controllers.js";
-import { fetchLocations } from "./helpers/bot/get-all-locations.js";
-import { isValidUrl } from "./helpers/bot/is-valid-url.js";
-import { parseCoordinates } from "./helpers/bot/parse-coordinates.js";
-import { groupLocationsByRegion } from "./helpers/bot/group-locations.js";
+import connectDb from "../src/helpers/connectDb.js";
+import { getUserOrders } from "../controllers.js";
+import { fetchLocations } from "./helpers/get-all-locations.js";
+import { isValidUrl } from "./helpers/is-valid-url.js";
+import { parseCoordinates } from "./helpers/parse-coordinates.js";
+import { groupLocationsByRegion } from "./helpers/group-locations.js";
+import {
+  backToRegionsText,
+  mainMenuText,
+  myOrdersText,
+  ourLocationsText,
+} from "./constants/texts.js";
+import { getCurrency } from "./helpers/get-currency.js";
 
 config();
 
@@ -24,22 +30,22 @@ bot.use(session()).use((ctx, next) => {
 });
 
 const mainMenu = Markup.keyboard([
-  "Buyurtmalarim",
+  myOrdersText,
   Markup.button.webApp("Buyurtma berish", WEBAPP_URL),
-  "Manzillarimiz📍",
+  ourLocationsText,
 ]).resize();
 
 async function sendMainMenu(ctx) {
   await ctx.reply(
     "Menu",
     Markup.keyboard([
-      "Buyurtmalarim",
+      myOrdersText,
       Markup.button.webApp(
         "Buyurtma berish",
         WEBAPP_URL +
           `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`
       ),
-      "Manzillarimiz📍",
+      ourLocationsText,
     ]).resize()
   );
 }
@@ -85,12 +91,13 @@ bot.on("contact", async (ctx) => {
   await sendMainMenu(ctx);
 });
 
-bot.hears("Buyurtmalarim", async (ctx) => {
+bot.hears(myOrdersText, async (ctx) => {
   const userOrders = await getUserOrders(
     ctx.session.user,
     ctx.message.from.username
   );
-  const currency = await getCurrency();
+  const currency = await getCurrency(API_URL);
+
   if (userOrders.length > 0) {
     userOrders.forEach(async (order) => {
       const product = order.product;
@@ -123,7 +130,7 @@ bot.hears("Buyurtmalarim", async (ctx) => {
 
 // Handler for the "Locations📍" button and /locations command
 bot.command("locations", handleLocations);
-bot.hears("Manzillarimiz📍", handleLocations);
+bot.hears(ourLocationsText, handleLocations);
 
 async function handleLocations(ctx) {
   try {
@@ -131,15 +138,15 @@ async function handleLocations(ctx) {
     const locationsByRegion = groupLocationsByRegion(locations);
 
     if (Object.keys(locationsByRegion).length === 0) {
-      return ctx.reply("No regions or locations found.");
+      return ctx.reply("Viloyat/shahar topilmadi.");
     }
 
     const keyboard = Markup.keyboard([
       ...Object.keys(locationsByRegion).map((region) => [region]),
-      ["Back to Main Menu"],
+      [mainMenuText],
     ]).resize();
 
-    await ctx.reply("Choose a region:", keyboard);
+    await ctx.reply("Viloyat/shaharni tanlang:", keyboard);
 
     // Store the grouped locations in session for later use
     ctx.session = {
@@ -157,7 +164,7 @@ async function handleLocations(ctx) {
 bot.hears(/.+/, async (ctx) => {
   const messageText = ctx.message.text;
 
-  if (messageText === "Back to Main Menu") {
+  if (messageText === mainMenuText) {
     ctx.session.state = null;
     return sendMainMenu(ctx);
   }
@@ -172,11 +179,11 @@ bot.hears(/.+/, async (ctx) => {
     const locationsInRegion = locationsByRegion[messageText];
     const keyboard = Markup.keyboard([
       ...locationsInRegion.map((loc) => [loc.name]),
-      ["Back to Regions"],
-      ["Back to Main Menu"],
+      [backToRegionsText],
+      [mainMenuText],
     ]).resize();
 
-    await ctx.reply(`Choose a location in ${messageText}:`, keyboard);
+    await ctx.reply(`Viloyatdagi manzillarimiz ${messageText}:`, keyboard);
 
     // Store the selected region in session
     ctx.session = {
@@ -184,7 +191,7 @@ bot.hears(/.+/, async (ctx) => {
       selectedRegion: messageText,
       state: "selecting_location",
     };
-  } else if (messageText === "Back to Regions") {
+  } else if (messageText === backToRegionsText) {
     return handleLocations(ctx);
   } else if (state === "selecting_location") {
     // This might be a location name, so let's check
@@ -249,9 +256,3 @@ bot.use(async (ctx, err) => {
     return;
   }
 });
-
-async function getCurrency() {
-  const res = await axios.get(API_URL + "/api/currency");
-  const currency = res.data.data.val;
-  return currency;
-}

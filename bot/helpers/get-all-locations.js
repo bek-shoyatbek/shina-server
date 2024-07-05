@@ -1,4 +1,4 @@
-import locationModel from "../../models/location.model.js";
+import locationModel from "../../src/models/location.model.js";
 export async function fetchLocations() {
   try {
     return await locationModel.find();

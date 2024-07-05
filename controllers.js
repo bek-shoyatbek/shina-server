@@ -1,31 +1,7 @@
 import mongoose from "mongoose";
-import Con from "./models/concurrency.model.js";
-import Product from "./models/product.model.js";
-import Order from "./models/order.model.js";
+import Product from "./src/models/product.model.js";
+import Order from "./src/models/order.model.js";
 import fs from "fs";
-
-export const getUSDRate = async () => {
-  try {
-    let data = await Con.findOne({ id: 0 });
-    if (!data) {
-      let newData = new Con({ val: 11000 });
-      data = newData;
-      await newData.save();
-    }
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const setUSDRate = async (val) => {
-  try {
-    let data = await Con.findOneAndUpdate({ id: 0 }, { val: val });
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export const getProducts = async (offset, limit) => {
   try {
@@ -43,13 +19,14 @@ export const getProducts = async (offset, limit) => {
 
 export const getOneById = async (productId) => {
   try {
-    let product = await Product.findById(new mongoose.Types.ObjectId(productId))
-      .select("-__v")
+    let product = await Product.findById(
+      new mongoose.Types.ObjectId(productId)
+    ).select("-__v");
     return product;
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 export const getAllProducts = async () => {
   let products = await Product.find();
@@ -65,10 +42,12 @@ export const addProducts = async (data) => {
   }
 };
 
-
 export const updateProduct = async (productId, newProduct) => {
   try {
-    await Product.updateOne({ _id: new mongoose.Types.ObjectId(productId) }, newProduct[0]);
+    await Product.updateOne(
+      { _id: new mongoose.Types.ObjectId(productId) },
+      newProduct[0]
+    );
   } catch (err) {
     console.log(err);
   }
@@ -77,20 +56,15 @@ export const updateProduct = async (productId, newProduct) => {
 export const getUserOrders = async (userContact, username) => {
   try {
     const userOrders = await Order.find({
-      $or: [
-        { userContact: userContact },
-        { username: username },
-      ]
+      $or: [{ userContact: userContact }, { username: username }],
     })
       .populate("product")
       .select("-__v");
     return userOrders;
   } catch (err) {
     console.log(err);
-
   }
-}
-
+};
 
 export const orderProduct = async (credentials) => {
   try {
@@ -100,7 +74,7 @@ export const orderProduct = async (credentials) => {
       username,
       userContact,
       creditType,
-      product: new mongoose.Types.ObjectId(productId)
+      product: new mongoose.Types.ObjectId(productId),
     });
     const result = await newOrder.save();
     if (!result) {
@@ -110,12 +84,13 @@ export const orderProduct = async (credentials) => {
   } catch (err) {
     console.log(err);
   }
-}
-
+};
 
 export const updateProductById = async (productId, updates) => {
   try {
-    const product = await Product.findById(new mongoose.Types.ObjectId(productId));
+    const product = await Product.findById(
+      new mongoose.Types.ObjectId(productId)
+    );
     if (product) {
       fs.access(product.image, fs.constants.F_OK, (err) => {
         if (err) {
@@ -129,27 +104,30 @@ export const updateProductById = async (productId, updates) => {
         }
       });
     }
-    const result = await Product.findByIdAndUpdate(new mongoose.Types.ObjectId(productId), updates)
+    const result = await Product.findByIdAndUpdate(
+      new mongoose.Types.ObjectId(productId),
+      updates
+    );
     return result;
   } catch (err) {
     console.log(err);
   }
-}
-
+};
 
 export const addProduct = async (product) => {
   try {
-    const result = await Product.create(product)
+    const result = await Product.create(product);
     return result;
   } catch (err) {
     console.log(err);
   }
-}
-
+};
 
 export const deleteProduct = async (productId) => {
   try {
-    const product = await Product.findById(new mongoose.Types.ObjectId(productId));
+    const product = await Product.findById(
+      new mongoose.Types.ObjectId(productId)
+    );
     if (product) {
       fs.access(product.image, fs.constants.F_OK, (err) => {
         if (err) {
@@ -163,9 +141,11 @@ export const deleteProduct = async (productId) => {
         }
       });
     }
-    const result = await Product.findByIdAndDelete(new mongoose.Types.ObjectId(productId));
+    const result = await Product.findByIdAndDelete(
+      new mongoose.Types.ObjectId(productId)
+    );
     return result;
   } catch (err) {
     console.log(err);
   }
-}
+};

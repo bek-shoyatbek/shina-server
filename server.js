@@ -4,7 +4,7 @@ import expressSession from "express-session";
 import { fileURLToPath } from "url";
 import http from "http";
 import { config } from "dotenv";
-import { bot } from "./bot.js";
+import { bot } from "./bot/bot.js";
 import path from "path";
 import morgan from "morgan";
 
@@ -42,7 +42,7 @@ app.set("view engine", "ejs");
 
 // Routes
 import { router } from "./routes.js";
-import { router as locationRoutes } from "./routes/location.routes.js";
+import { router as locationRoutes } from "./src/routes/location.routes.js";
 
 app.get("/admin", (req, res) => {
   console.log("admin page");
