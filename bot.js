@@ -23,7 +23,28 @@ bot.use(session()).use((ctx, next) => {
   return next();
 });
 
-bot.start(async (ctx) => {
+const mainMenu = Markup.keyboard([
+  "Buyurtmalarim",
+  Markup.button.webApp("Buyurtma berish", WEBAPP_URL),
+  "Manzillarimiz📍",
+]).resize();
+
+async function sendMainMenu(ctx) {
+  await ctx.reply(
+    "Menu",
+    Markup.keyboard([
+      "Buyurtmalarim",
+      Markup.button.webApp(
+        "Buyurtma berish",
+        WEBAPP_URL +
+          `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`
+      ),
+      "Manzillarimiz📍",
+    ]).resize()
+  );
+}
+
+bot.command("start", async (ctx) => {
   await ctx.reply("Assalamu Alaykum", {
     reply_markup: {
       remove_keyboard: true,
@@ -53,18 +74,7 @@ bot.start(async (ctx) => {
         }
       );
     } else {
-      await ctx.reply(
-        "Menu",
-        Markup.keyboard([
-          "Buyurtmalarim",
-          Markup.button.webApp(
-            "Buyurtma berish",
-            WEBAPP_URL +
-              `?userContact=${ctx.session.user}&username=${ctx.message.from.username}`
-          ),
-          "Manzillarimiz📍",
-        ]).resize()
-      );
+      await sendMainMenu(ctx);
     }
   }
 });
@@ -72,18 +82,7 @@ bot.start(async (ctx) => {
 bot.on("contact", async (ctx) => {
   const userContact = ctx.message.contact.phone_number.toString().slice(3);
   ctx.session.user = userContact;
-  await ctx.reply(
-    "Menu",
-    Markup.keyboard([
-      "Buyurtmalarim",
-      Markup.button.webApp(
-        "Buyurtma berish",
-        WEBAPP_URL +
-          `?userContact=${userContact}&username=${ctx.message.from.username}`
-      ),
-      "Manzillarimiz📍",
-    ]).resize()
-  );
+  await sendMainMenu(ctx);
 });
 
 bot.hears("Buyurtmalarim", async (ctx) => {
@@ -122,8 +121,11 @@ bot.hears("Buyurtmalarim", async (ctx) => {
   }
 });
 
-// Handler for the "Locations📍" button
-bot.hears("Manzillarimiz📍", async (ctx) => {
+// Handler for the "Locations📍" button and /locations command
+bot.command("locations", handleLocations);
+bot.hears("Manzillarimiz📍", handleLocations);
+
+async function handleLocations(ctx) {
   try {
     const locations = await fetchLocations(API_URL);
     const locationsByRegion = groupLocationsByRegion(locations);
@@ -132,38 +134,59 @@ bot.hears("Manzillarimiz📍", async (ctx) => {
       return ctx.reply("No regions or locations found.");
     }
 
-    const keyboard = Markup.keyboard(
-      Object.keys(locationsByRegion).map((region) => [region]),
-      { columns: 2 }
-    ).resize();
+    const keyboard = Markup.keyboard([
+      ...Object.keys(locationsByRegion).map((region) => [region]),
+      ["Back to Main Menu"],
+    ]).resize();
 
     await ctx.reply("Choose a region:", keyboard);
 
     // Store the grouped locations in session for later use
-    ctx.session = { ...ctx.session, locationsByRegion };
+    ctx.session = {
+      ...ctx.session,
+      locationsByRegion,
+      state: "selecting_region",
+    };
   } catch (err) {
     console.error("Error in Locations📍 handler:", err);
     await ctx.reply("Sorry, there was an error fetching locations.");
   }
-});
+}
 
-// Handler for region selection
+// Handler for region selection and back button
 bot.hears(/.+/, async (ctx) => {
-  const selectedRegion = ctx.message.text;
-  const { locationsByRegion } = ctx.session || {};
+  const messageText = ctx.message.text;
 
-  if (locationsByRegion && locationsByRegion[selectedRegion]) {
-    const locationsInRegion = locationsByRegion[selectedRegion];
-    const keyboard = Markup.keyboard(
-      locationsInRegion.map((loc) => [loc.name]),
-      { columns: 2 }
-    ).resize();
+  if (messageText === "Back to Main Menu") {
+    ctx.session.state = null;
+    return sendMainMenu(ctx);
+  }
 
-    await ctx.reply(`Choose a location in ${selectedRegion}:`, keyboard);
+  const { locationsByRegion, state } = ctx.session || {};
+
+  if (
+    state === "selecting_region" &&
+    locationsByRegion &&
+    locationsByRegion[messageText]
+  ) {
+    const locationsInRegion = locationsByRegion[messageText];
+    const keyboard = Markup.keyboard([
+      ...locationsInRegion.map((loc) => [loc.name]),
+      ["Back to Regions"],
+      ["Back to Main Menu"],
+    ]).resize();
+
+    await ctx.reply(`Choose a location in ${messageText}:`, keyboard);
 
     // Store the selected region in session
-    ctx.session = { ...ctx.session, selectedRegion };
-  } else {
+    ctx.session = {
+      ...ctx.session,
+      selectedRegion: messageText,
+      state: "selecting_location",
+    };
+  } else if (messageText === "Back to Regions") {
+    return handleLocations(ctx);
+  } else if (state === "selecting_location") {
     // This might be a location name, so let's check
     await handlePossibleLocation(ctx);
   }
@@ -187,13 +210,13 @@ async function handlePossibleLocation(ctx) {
     try {
       if (isValidUrl(location.link)) {
         await ctx.reply(`${location.name}: ${location.link}`);
+      }
+      const coords = parseCoordinates(location.link);
+
+      if (coords) {
+        await ctx.replyWithLocation(coords.latitude, coords.longitude);
       } else {
-        const coords = parseCoordinates(location.link);
-        if (coords) {
-          await ctx.replyWithLocation(coords.latitude, coords.longitude);
-        } else {
-          await ctx.reply(`Unable to process location for ${location.name}.`);
-        }
+        await ctx.reply(`Unable to process location for ${location.name}.`);
       }
     } catch (err) {
       console.error(`Error sending location ${location.name}:`, err);
