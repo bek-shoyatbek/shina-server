@@ -100,8 +100,9 @@ router.get("/orders/:userContact", async (req, res, next) => {
   }
 });
 
-router.post("/product", upload.single("image"), async (req, res, next) => {
+router.post("/add", upload.single("image"), async (req, res, next) => {
   try {
+    console.log("upcoming image", req.file);
     const image = req.file;
     if (!image) {
       return res.status(400).send("image is required");
