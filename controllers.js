@@ -3,17 +3,57 @@ import Product from "./src/models/product.model.js";
 import Order from "./src/models/order.model.js";
 import fs from "fs";
 
-export const getProducts = async (offset, limit) => {
+// export const getProducts = async (offset, limit) => {
+//   try {
+//     offset = offset ? offset : 0;
+//     let products = await Product.find()
+//       .skip(offset || 0)
+//       .limit(limit || 10)
+//       .select("-__v")
+//       .lean();
+//     return products;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+export const getProducts = async (offset, limit, category, size) => {
   try {
-    offset = offset ? offset : 0;
-    let products = await Product.find()
-      .skip(offset || 0)
-      .limit(limit || 10)
+    offset = offset ? parseInt(offset) : 0;
+    limit = limit ? parseInt(limit) : 10;
+
+    let query = {};
+    if (category && category !== "all") {
+      query.full_model = category.trim();
+    }
+    if (size && size !== "all") {
+      query["full_name"] = new RegExp(size + "$");
+    }
+
+    const products = await Product.find(query)
+      .skip(offset)
+      .limit(limit)
       .select("-__v")
       .lean();
-    return products;
+
+    const total = await Product.countDocuments(query);
+
+    const categories = await Product.distinct("full_model");
+    const sizes = await Product.distinct("full_name").then((names) =>
+      Array.from(new Set(names.map((name) => name.split(" ").pop())))
+    );
+
+    return {
+      products,
+      totalCount: total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: Math.floor(offset / limit) + 1,
+      categories,
+      sizes,
+    };
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };
 
