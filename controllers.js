@@ -3,14 +3,9 @@ import Product from "./src/models/product.model.js";
 import Order from "./src/models/order.model.js";
 import fs from "fs";
 
-export const getProducts = async (offset, limit) => {
+export const getProducts = async () => {
   try {
-    offset = offset ? offset : 0;
-    let products = await Product.find()
-      .skip(offset || 0)
-      .limit(limit || 10)
-      .select("-__v")
-      .lean();
+    let products = await Product.find().select("-__v").lean();
     return products;
   } catch (err) {
     console.log(err);

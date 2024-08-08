@@ -23,9 +23,7 @@ const upload = multer({ storage: storage });
 
 router.get("/products", async (req, res, next) => {
   try {
-    // const products = await getAllProducts();
-    const { offset, limit, category, size } = req.query;
-    const products = await getProducts(offset, limit, category, size);
+    const products = await getProducts();
 
     if (!products) return res.status(204);
     return res.status(200).send(products);
